@@ -23,7 +23,6 @@ public class ArrayRandom {
         int row = 0;
         int col = 0;
 
-        
         return new int[]{row, col};
     }
 

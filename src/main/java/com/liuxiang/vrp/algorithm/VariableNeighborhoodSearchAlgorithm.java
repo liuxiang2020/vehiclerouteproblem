@@ -17,20 +17,18 @@ public class VariableNeighborhoodSearchAlgorithm {
         this.model = model;
         this.maxIteration = maxIteration;
         routeService = new RouteService(model.getDistanceMatrix());
-
     }
-
 
 
     public void run(){
         Route initRoute = new InitSolutionGenerator().generateRouteRandom(model);
-//        routeService.exchange(initRoute, 0, 3);
-//        routeService.exchange(initRoute, 2, 2);
-//        routeService.exchange(initRoute, 2, 5);
-//        routeService.exchange(initRoute, 2, 3);
-//        routeService.exchange(initRoute, 2, 4);
-//        routeService.swap(initRoute, 2, 4);
-//        routeService.insert(initRoute, 1,2);
+        routeService.swap(initRoute, 0, 3);
+        routeService.swap(initRoute, 2, 2);
+        routeService.swap(initRoute, 2, 5);
+        routeService.swap(initRoute, 2, 3);
+        routeService.swap(initRoute, 2, 4);
+        routeService.swap(initRoute, 2, 4);
+        routeService.insert(initRoute, 1,2);
         routeService.insert(initRoute, 1,4);
         routeService.evaluate(initRoute);
 

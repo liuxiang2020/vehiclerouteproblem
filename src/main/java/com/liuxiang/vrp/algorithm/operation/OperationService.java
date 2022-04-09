@@ -1,9 +1,8 @@
-package com.liuxiang.vrp.algorithm.operate;
+package com.liuxiang.vrp.algorithm.operation;
 
 import com.liuxiang.vrp.element.Route;
-import com.liuxiang.vrp.enums.NeighborHoodEnum;
+import com.liuxiang.vrp.enums.NeighborHoodType;
 import com.liuxiang.vrp.service.ArrayRandom;
-import com.liuxiang.vrp.service.ReadService;
 import com.liuxiang.vrp.service.RouteService;
 
 /**
@@ -21,15 +20,15 @@ public class OperationService  {
      * shaking
      * @param routeService
      * @param route
-     * @param neighborHoodEnum
+     * @param neighborHoodType
      * @return
      */
-    public static Route shaking(RouteService routeService, Route route, NeighborHoodEnum neighborHoodEnum){
+    public static Route shaking(RouteService routeService, Route route, NeighborHoodType neighborHoodType){
 
         // 深拷贝
 
         int[] indexs = ArrayRandom.randomTwo(0, route.length());
-        switch (neighborHoodEnum){
+        switch (neighborHoodType){
             case SWAP:
                 routeService.swap(route, indexs[0], indexs[1]);
                 break;

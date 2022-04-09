@@ -2,6 +2,7 @@ package com.liuxiang.vrp.service;
 
 import com.liuxiang.vrp.element.Node;
 import com.liuxiang.vrp.element.Route;
+import com.liuxiang.vrp.utils.Epsilon;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -143,8 +144,11 @@ public class RouteService {
             reversion(route, indexA, indexB);
         }else{
             int nodeAIndex = route.remove(indexA);
-            route.insert(indexB, nodeAIndex);
-            log.info("indexA={}, indexB={}, 插入后，{}",indexA, indexB, route.toString());
+            if(indexA<indexB)
+                route.insert(indexB-1, nodeAIndex);
+            else
+                route.insert(indexB, nodeAIndex);
+            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
         }
         return route.getDistance();
     }
@@ -158,7 +162,7 @@ public class RouteService {
         }
         distance += matrix[node.getIndex()][node.getNext().getIndex()];
         log.info("distance={}, route.distance={}", distance, route.getDistance());
-        if(Math.abs(route.getDistance()-distance)>0.1)
+        if(Math.abs(route.getDistance()-distance)> Epsilon.MIN_VALUE)
             throw new IllegalArgumentException("领域操作函数在计算路径长度时，出错了，需要检查");
         return distance;
     }

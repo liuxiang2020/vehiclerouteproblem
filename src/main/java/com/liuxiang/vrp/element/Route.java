@@ -54,23 +54,21 @@ public class Route {
      * @param element
      */
     public void add(int element){
-        insert(size, element);
+        insert(size-1, element);
     }
 
     /**
-     * 将element插入到第index个元素前
+     * 将element插入到第index个元素后
      * @param index
      * @param element
      */
     public void insert(int index, int element){
         Node node=getNode(index);
-        distance = distance - matrix[node.prev.index][node.index]
-                + matrix[node.prev.index][element] + matrix[element][node.index];
-
-        Node newNode=new Node(element, node.prev, node);
-
-        node.prev.next=newNode;
-        node.prev=newNode;
+        distance = distance - matrix[node.index][node.next.index]
+                + matrix[node.index][element] + matrix[element][node.next.index];
+        Node newNode=new Node(element, node, node.next);
+        node.next.prev=newNode;
+        node.next=newNode;
         size++;
     }
 
