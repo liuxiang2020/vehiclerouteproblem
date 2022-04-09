@@ -15,6 +15,29 @@ public class RouteService {
     }
 
     /**
+     * 将indexA位置的城市插入到indexB位置后面
+     * @param route
+     * @param indexA
+     * @param indexB
+     * @return
+     */
+    public double insert(Route route, int indexA, int indexB){
+        if(indexA==indexB || indexA-indexB==1){
+            log.info("indexA={}, indexB={}，插入前后结果一样，无需操作", indexA, indexB);
+        } else{
+            int nodeAIndex = route.remove(indexA);
+            if(indexA<indexB)
+                route.insert(indexB-1, nodeAIndex);
+            else
+                route.insert(indexB, nodeAIndex);
+            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
+        }
+        if(indexA==0)
+            log.info("indexA=0, 需改变首节点序号，改变后的首节点为{}", route.getHead().getIndex());
+        return route.getDistance();
+    }
+
+    /**
      * 交换操作
      * @param route
      * @param indexA
@@ -30,7 +53,7 @@ public class RouteService {
             int nodeAIndex = route.getNode(indexA).getIndex();
             route.set(indexA, route.getNode(indexB).getIndex());
             route.set(indexB, nodeAIndex);
-            log.info("交换第{}个节点和第{}个节点，交换后，{}", indexA, indexB, route.toString());
+            log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
         }
         return route.getDistance();
     }
@@ -48,10 +71,28 @@ public class RouteService {
             indexB = indexA;
             indexA = temp;
         }else if(indexA==indexB){
+            log.info("indexA与indexB相同，不用任何处理");
             return route.getDistance();
         }
+        if(indexA==0 && indexB==route.length()-1){
+            log.info("翻转首节点和尾节点之间的路径，相当于只是方向行走，相当于未翻转，不做任务处理直接退出");
+//        if(indexA==0 && indexB==route.length()-1){
+//            for (int i = 0; i <= indexB; i++) {
+//                tempNode = nodeA.getNext();
+//                nodeA.setNext(nodeA.getPrev());
+//                nodeA.setPrev(tempNode);
+//                nodeA = tempNode;
+//            }
+//        }
+            return route.getDistance();
+        }
+
         Node nodeA = route.getNode(indexA);
         Node nodeB = route.getNode(indexB);
+
+        if(indexA==0)
+            route.setHead(nodeB);
+
         Node preNodeA = nodeA.getPrev();
         Node nextNodeB = nodeB.getNext();
         // 设置路径距离
@@ -61,6 +102,7 @@ public class RouteService {
 
         Node lastTemp = nodeA;
         Node tempNode = nodeA.getNext();
+
         for(int i=indexA; i<=indexB; i++){
             if(i==indexA){
                 nodeA.setPrev(tempNode);
@@ -79,7 +121,7 @@ public class RouteService {
         nextNodeB.setPrev(nodeA);
         preNodeA.setNext(nodeB);
 
-        log.info("翻转第{}到{}之间的节点，翻转后，{}", indexA, indexB, route.toString());
+        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
 
         return route.getDistance();
     }
@@ -129,33 +171,10 @@ public class RouteService {
                 - matrix[nodeB.getIndex()][nodeB.getNext().getIndex()];
     }
 
-    /**
-     * 将indexA位置的城市插入到indexB位置后面
-     * @param route
-     * @param indexA
-     * @param indexB
-     * @return
-     */
-    public double insert(Route route, int indexA, int indexB){
-        if(indexA==indexB){
-            log.info("两个节点的一样，无须使用插入操作");
-        } else if(Math.abs(indexA-indexB)==1){
-            log.info("交换的两个节点的序号的插值等于1，采用翻转操作");
-            reversion(route, indexA, indexB);
-        }else{
-            int nodeAIndex = route.remove(indexA);
-            if(indexA<indexB)
-                route.insert(indexB-1, nodeAIndex);
-            else
-                route.insert(indexB, nodeAIndex);
-            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
-        }
-        return route.getDistance();
-    }
-
     public double evaluate(Route route){
         Node node = route.getHead();
         double distance = 0.0;
+
         while (node.getNext().getIndex()!=route.getHead().getIndex()){
             distance += matrix[node.getIndex()][node.getNext().getIndex()];
             node = node.getNext();

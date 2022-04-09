@@ -22,16 +22,18 @@ public class VariableNeighborhoodSearchAlgorithm {
 
     public void run(){
         Route initRoute = new InitSolutionGenerator().generateRouteRandom(model);
-        routeService.swap(initRoute, 0, 3);
-        routeService.swap(initRoute, 2, 2);
-        routeService.swap(initRoute, 2, 5);
-        routeService.swap(initRoute, 2, 3);
-        routeService.swap(initRoute, 2, 4);
-        routeService.swap(initRoute, 2, 4);
-        routeService.insert(initRoute, 1,2);
-        routeService.insert(initRoute, 1,4);
+        routeService.swap(initRoute, 0, 7);
+//        routeService.swap(initRoute, 2, 2);
+//        routeService.reversion(initRoute, 0, 7);
+//        routeService.reversion(initRoute, 0, 6);
+//        routeService.reversion(initRoute, 0, 7);
+//        routeService.reversion(initRoute, 3, 7);
+//        routeService.swap(initRoute, 2, 3);
+//        routeService.swap(initRoute, 2, 4);
+//        routeService.swap(initRoute, 2, 4);
+//        routeService.insert(initRoute, 4,0);
+//        routeService.insert(initRoute, 1,4);
         routeService.evaluate(initRoute);
-
     }
 
     public static void main(String[] args) {

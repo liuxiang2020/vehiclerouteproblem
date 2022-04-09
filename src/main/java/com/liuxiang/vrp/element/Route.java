@@ -74,6 +74,9 @@ public class Route {
 
     public int remove(int index){
         Node node = getNode(index);
+        if(index==0){
+            head = node.getNext();
+        }
         int data = node.index;
         distance = distance - matrix[node.prev.index][node.index] - matrix[node.index][node.next.index]
                 + matrix[node.prev.index][node.next.index];

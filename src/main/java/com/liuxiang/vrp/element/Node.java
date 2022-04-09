@@ -20,14 +20,6 @@ public class Node {
         this.next = next;
     }
 
-    public static void main(String[] args) {
-        List<Integer> values = new ArrayList<>();
-        values.add(4);
-        values.add(8);
-        int v = values.get(1);
-        System.out.println(v);
-    }
-
     @Override
     public String toString(){
         return String.format("pre=%d, index=%d, next=%d", prev.index, index, next.index);
