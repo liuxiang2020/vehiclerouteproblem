@@ -18,7 +18,7 @@ public enum NeighborHoodType {
 
     private static final Map<Integer, NeighborHoodType> neighborHoodIndexMap = new HashMap<>();
     private static final Map<String, NeighborHoodType> neighborHoodNameMap = new HashMap<>();
-
+    private static final Map<NeighborHoodType, NeighborHoodType> nextNeighbor = new HashMap<>();
 
     static {
         for(NeighborHoodType type : values())
@@ -26,7 +26,14 @@ public enum NeighborHoodType {
         for(NeighborHoodType type : values())
             neighborHoodNameMap.put(type.name, type);
 
+        NeighborHoodType lastNeighbor = null;
+        for(NeighborHoodType type : values()){
+            nextNeighbor.put(lastNeighbor, type);
+            lastNeighbor = type;
+        }
+        nextNeighbor.put(lastNeighbor, null);
     }
+
 
     public static NeighborHoodType getNeighborhoodType(int index){
         return neighborHoodIndexMap.get(index);
@@ -34,5 +41,9 @@ public enum NeighborHoodType {
 
     public static NeighborHoodType getNeighborhoodType(String name){
         return neighborHoodNameMap.get(name);
+    }
+
+    public static NeighborHoodType getNextNeighborhoodType(NeighborHoodType neighborHoodType){
+        return nextNeighbor.get(neighborHoodType);
     }
 }

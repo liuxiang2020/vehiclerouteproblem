@@ -27,7 +27,12 @@
             <version>1.7.25</version>
             <!-- <scope>test</scope> -->
         </dependency>
-
+        <!--深拷贝库-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
     </dependencies>
 
     <properties>

@@ -2,17 +2,15 @@ package com.liuxiang.vrp.element;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
 @Data
-public class Node {
+public class Node implements Serializable {
     Node prev;
     int index;
     Node next;
 
-    public Node (int nodeCode) { this.index = nodeCode;
-    }
+    public Node (int nodeCode) { this.index = nodeCode; }
 
     public Node (int data, Node prev,  Node next) {
         this.prev = prev;

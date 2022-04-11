@@ -3,12 +3,15 @@ package com.liuxiang.vrp.service;
 import com.liuxiang.vrp.element.Node;
 import com.liuxiang.vrp.element.Route;
 import com.liuxiang.vrp.utils.Epsilon;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SerializationUtils;
 
 @Slf4j
+@Data
 public class RouteService {
     // 距离矩阵
-    double[][] matrix;
+    private double[][] matrix;
 
     public RouteService(double[][] matrix) {
         this.matrix = matrix;
@@ -43,7 +46,7 @@ public class RouteService {
      * @param indexA
      * @param indexB
      */
-    public double swap(Route route, int indexA, int indexB){
+    public Route swap(Route route, int indexA, int indexB){
         if(indexA==indexB) {
             log.info("交换的两个节点的一样，无须交换");
         } else if(Math.abs(indexA-indexB)<=2){
@@ -55,7 +58,7 @@ public class RouteService {
             route.set(indexB, nodeAIndex);
             log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
         }
-        return route.getDistance();
+        return route;
     }
 
     /**
@@ -127,6 +130,8 @@ public class RouteService {
     }
 
     public double calculateReversionGapDistance(Route route, int indexA, int indexB){
+        if(indexA==indexB)
+            return Double.MAX_VALUE;
         Node nodeA = route.getNode(indexA);
         Node nodeB = route.getNode(indexB);
         Node preNodeA = nodeA.getPrev();
@@ -137,9 +142,9 @@ public class RouteService {
     }
 
     public double calculateInsertGapDistance(Route route, int indexA, int indexB){
-        if(indexA==indexB)
-            return 0.0;
-        if(Math.abs(indexA-indexB) == 1)
+        if(indexA==indexB || indexA-indexB == 1)
+            return Double.MAX_VALUE;
+        if(indexB-indexA == 1)
             return calculateReversionGapDistance(route, indexA, indexB);
 
         Node nodeA = route.getNode(indexA);
@@ -153,9 +158,8 @@ public class RouteService {
     }
 
     public double calculateSwapGapDistance(Route route, int indexA, int indexB){
-
         if(indexA==indexB)
-            return 0.0;
+            return Double.MAX_VALUE;
         if(Math.abs(indexA-indexB)<=2)
             return calculateReversionGapDistance(route, indexA, indexB);
 
@@ -184,5 +188,13 @@ public class RouteService {
         if(Math.abs(route.getDistance()-distance)> Epsilon.MIN_VALUE)
             throw new IllegalArgumentException("领域操作函数在计算路径长度时，出错了，需要检查");
         return distance;
+    }
+
+    public double getDistance(int row, int col){
+        return matrix[row][col];
+    }
+
+    public static Route deepCopyRoute(Route route){
+        return (Route) SerializationUtils.clone(route);
     }
 }

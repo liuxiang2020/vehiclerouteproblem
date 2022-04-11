@@ -18,7 +18,6 @@ public class InitSolutionGenerator {
             path.add(i);
         Collections.shuffle(path);
         Route route = new Route(path.get(0), model.getDistanceMatrix());
-        System.out.println("添加元素的顺序为"+path.toString());
         for (int i = 1; i < path.size(); i++){
             route.add(path.get(i));
         }
