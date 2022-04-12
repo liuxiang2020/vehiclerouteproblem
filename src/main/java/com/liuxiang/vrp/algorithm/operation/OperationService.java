@@ -51,7 +51,7 @@ public class OperationService  {
                 gapDistance[i][j] = gapDistance[j][i] = routeService.calculateSwapGapDistance(route, i, j);
 
         int localIter = 0;
-        while(localIter<maxSwapNum){
+        while(localIter < maxSwapNum){
             Coordinate coordinate = ArrayUtils.findCoordinateOfMinimumValue(gapDistance);
             if(routeService.getDistance(coordinate.getRow(),coordinate.getCol()) < 0){
                 routeService.swap(route, coordinate.getRow(), coordinate.getCol());
@@ -108,7 +108,5 @@ public class OperationService  {
         }
         return route;
     }
-
-
 
 }
