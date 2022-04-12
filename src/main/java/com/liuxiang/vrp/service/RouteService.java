@@ -2,7 +2,7 @@ package com.liuxiang.vrp.service;
 
 import com.liuxiang.vrp.element.Node;
 import com.liuxiang.vrp.element.Route;
-import com.liuxiang.vrp.utils.Epsilon;
+import com.liuxiang.vrp.utils.MyNumber;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
@@ -185,7 +185,7 @@ public class RouteService {
         }
         distance += matrix[node.getIndex()][node.getNext().getIndex()];
         log.info("distance={}, route.distance={}", distance, route.getDistance());
-        if(Math.abs(route.getDistance()-distance)> Epsilon.MIN_VALUE)
+        if(Math.abs(route.getDistance()-distance)> MyNumber.MIN_VALUE)
             throw new IllegalArgumentException("领域操作函数在计算路径长度时，出错了，需要检查");
         return distance;
     }

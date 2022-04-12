@@ -2,6 +2,7 @@ package com.liuxiang.vrp.service;
 
 import com.liuxiang.vrp.TspModel;
 import com.liuxiang.vrp.element.City;
+import com.liuxiang.vrp.utils.MyNumber;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -32,13 +33,16 @@ public class ReadService {
             log.info(ioe.getMessage());
         }
         double[][] distance = new double[cities.size()][cities.size()];
-        for (int i = 0; i < cities.size(); i++) {
+        for (int i = 0; i < cities.size()-1; i++) {
             City ci = cities.get(i);
-            for (int j = i; j < cities.size(); j++) {
+            for (int j = i+1; j < cities.size(); j++) {
                 City cj = cities.get(j);
                 distance[i][j] = distance[j][i] = Math.sqrt(Math.pow((ci.x - cj.x),2) + Math.pow((ci.y - cj.y),2));
             }
         }
+        for (int i = 0; i < cities.size(); i++)
+            distance[i][i] = MyNumber.MAX_VALUE;
+
         return TspModel.builder()
                 .citySize(cities.size())
                 .distanceMatrix(distance)
