@@ -16,7 +16,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 
-public class LineChartCreater {
+public class LineChartCreator {
     public static XYDataset createDataset(double[][] iterValue) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         XYSeries series = new XYSeries("algorithm", false);
@@ -71,8 +71,8 @@ public class LineChartCreater {
     }
 
     public static ChartPanel createChartPanel(DrawLine drawLine){
-        XYDataset dataSet = LineChartCreater.createDataset(drawLine.getIterValue());
-        JFreeChart chart = LineChartCreater.createChart(dataSet, drawLine);
+        XYDataset dataSet = LineChartCreator.createDataset(drawLine.getIterValue());
+        JFreeChart chart = LineChartCreator.createChart(dataSet, drawLine);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         chartPanel.setBackground(Color.white);

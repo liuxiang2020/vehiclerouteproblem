@@ -1,7 +1,7 @@
 package com.liuxiang.vrp.service;
 
 import com.liuxiang.vrp.TspModel;
-import com.liuxiang.vrp.algorithm.draw.LineChartCreater;
+import com.liuxiang.vrp.algorithm.draw.LineChartCreator;
 import com.liuxiang.vrp.algorithm.draw.LineChartEx;
 import com.liuxiang.vrp.element.City;
 import com.liuxiang.vrp.element.DrawLine;
@@ -66,8 +66,8 @@ public class DrawService {
         DrawLine routeLine = createDrawLine(route, model);
 
         JFrame jFrame = new JFrame();
-        jFrame.add(LineChartCreater.createChartPanel(iterLine), BorderLayout.WEST);
-        jFrame.add(LineChartCreater.createChartPanel(routeLine), BorderLayout.EAST);
+        jFrame.add(LineChartCreator.createChartPanel(iterLine), BorderLayout.WEST);
+        jFrame.add(LineChartCreator.createChartPanel(routeLine), BorderLayout.EAST);
 
         jFrame.pack();
         jFrame.setTitle("迭代图和路径图");
