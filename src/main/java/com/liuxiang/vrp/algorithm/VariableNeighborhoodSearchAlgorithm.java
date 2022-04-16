@@ -41,13 +41,9 @@ public class VariableNeighborhoodSearchAlgorithm {
     }
 
 
-    public void test(){
-        // 生成初始解
-        Route initRoute = new InitSolutionGenerator().generateRouteRandom(model);
-        // 迭代
-
+    public void test(Route initRoute){
         routeService.swap(initRoute, 0, 8);
-//        routeService.swap(initRoute, 2, 2);
+//        routeService.swap(initRoute, 0, 7);
 //        routeService.reversion(initRoute, 0, 7);
 //        routeService.reversion(initRoute, 0, 6);
 //        routeService.reversion(initRoute, 0, 7);
@@ -103,7 +99,7 @@ public class VariableNeighborhoodSearchAlgorithm {
 //        TspModel model = TspExample.generateSimpleExample();
 //        model = TspExample.generateExampleFromFile("src/main/java/com/liuxiang/vrp/data/C110_1.TXT", 50);
         TspModel model = TspExample.generateExampleFromFile("src/main/java/com/liuxiang/vrp/data/book_input.txt", 51);
-        VariableNeighborhoodSearchAlgorithm algorithm = new VariableNeighborhoodSearchAlgorithm(model, 400);
+        VariableNeighborhoodSearchAlgorithm algorithm = new VariableNeighborhoodSearchAlgorithm(model, 50);
         Solution solution = algorithm.vnsForTSP();
         DrawService.drawDoubleFigure(solution.getIterDistanceRecord(), solution.getBestRoute(), model);
     }

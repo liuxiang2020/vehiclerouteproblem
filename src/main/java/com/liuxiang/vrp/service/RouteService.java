@@ -39,7 +39,6 @@ public class RouteService {
 //            log.info("indexA=0, 需改变首节点序号，改变后的首节点为{}", route.getHead().getIndex());
         }
 
-
         return route.getDistance();
     }
 
@@ -52,10 +51,7 @@ public class RouteService {
     public Route swap(Route route, int indexA, int indexB){
         if(indexA==indexB) {
 //            log.info("交换的两个节点的一样，无须交换");
-        } else if(Math.abs(indexA-indexB)<=2){
-//            log.info("交换的两个节点序号的差值小于等于2，采用翻转操作");
-            reverse(route, indexA, indexB);
-        } else{
+        }  else{
             int nodeAIndex = route.getNode(indexA).getIndex();
             route.set(indexA, route.getNode(indexB).getIndex());
             route.set(indexB, nodeAIndex);
@@ -71,17 +67,15 @@ public class RouteService {
      * @param indexB
      */
     public double reverse(Route route, int indexA, int indexB){
-//        log.info("翻转第{}到{}之间的节点，翻转前，{}", indexA, indexB, route.toString());
+
         if(indexA > indexB){
             int temp = indexB;
             indexB = indexA;
             indexA = temp;
         }else if(indexA==indexB){
-//            log.info("indexA与indexB相同，不用任何处理");
             return route.getDistance();
         }
-        if(indexA==0 && indexB==route.length()-1){
-//            log.info("翻转首节点和尾节点之间的路径，相当于只是方向行走，相当于未翻转，不做任务处理直接退出");
+        if((indexA==0 && indexB==route.length()-1) || (indexA==route.length()-1 && indexB==0)){
 //        if(indexA==0 && indexB==route.length()-1){
 //            for (int i = 0; i <= indexB; i++) {
 //                tempNode = nodeA.getNext();
@@ -92,20 +86,18 @@ public class RouteService {
 //        }
             return route.getDistance();
         }
+//        log.info("翻转第{}到{}之间的节点，翻转前，{}", indexA, indexB, route.toString());
+        // 设置路径距离
+        double gapDistance = calculateReversionGapDistance(route, indexA, indexB);
+        route.setDistance(route.getDistance() + gapDistance);
 
         Node nodeA = route.getNode(indexA);
         Node nodeB = route.getNode(indexB);
-
         if(indexA==0)
             route.setHead(nodeB);
 
         Node preNodeA = nodeA.getPrev();
         Node nextNodeB = nodeB.getNext();
-        // 设置路径距离
-        double gapDistance = matrix[preNodeA.getIndex()][nodeB.getIndex()] + matrix[nodeA.getIndex()][nextNodeB.getIndex()]
-                - matrix[preNodeA.getIndex()][nodeA.getIndex()] - matrix[nodeB.getIndex()][nextNodeB.getIndex()];
-        route.setDistance(route.getDistance() + gapDistance);
-
         Node lastTemp = nodeA;
         Node tempNode = nodeA.getNext();
 
@@ -126,28 +118,27 @@ public class RouteService {
         }
         nextNodeB.setPrev(nodeA);
         preNodeA.setNext(nodeB);
-
 //        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
-
         return route.getDistance();
     }
 
     public double calculateReversionGapDistance(Route route, int indexA, int indexB){
         if(indexA==indexB)
             return Double.MAX_VALUE;
+        if((indexA==0 && indexB==route.length()-1) || (indexA==route.length()-1 && indexB==0))
+            return Double.MAX_VALUE;
         Node nodeA = route.getNode(indexA);
         Node nodeB = route.getNode(indexB);
         Node preNodeA = nodeA.getPrev();
         Node nextNodeB = nodeB.getNext();
-        // 设置路径距离
         return matrix[preNodeA.getIndex()][nodeB.getIndex()] + matrix[nodeA.getIndex()][nextNodeB.getIndex()]
                 - matrix[preNodeA.getIndex()][nodeA.getIndex()] - matrix[nodeB.getIndex()][nextNodeB.getIndex()];
     }
 
     public double calculateInsertGapDistance(Route route, int indexA, int indexB){
-        if(indexA==indexB || indexA-indexB == 1)
+        if(indexA==indexB || indexA-indexB == 1 || (indexA==0 && indexB==route.length()-1))
             return Double.MAX_VALUE;
-        if(indexB-indexA == 1)
+        else if(indexB-indexA == 1)
             return calculateReversionGapDistance(route, indexA, indexB);
 
         Node nodeA = route.getNode(indexA);
@@ -163,19 +154,28 @@ public class RouteService {
     public double calculateSwapGapDistance(Route route, int indexA, int indexB){
         if(indexA==indexB)
             return Double.MAX_VALUE;
-        if(Math.abs(indexA-indexB)<=2)
+        else if(Math.abs(indexA-indexB)<=2)
             return calculateReversionGapDistance(route, indexA, indexB);
-
-        Node nodeA = route.getNode(indexA);
-        Node nodeB = route.getNode(indexB);
-        return matrix[nodeA.getPrev().getIndex()][nodeB.getIndex()]
-                + matrix[nodeB.getIndex()][nodeA.getNext().getIndex()]
-                + matrix[nodeB.getPrev().getIndex()][nodeA.getIndex()]
-                + matrix[nodeA.getIndex()][nodeB.getNext().getIndex()]
-                - matrix[nodeA.getPrev().getIndex()][nodeA.getIndex()]
-                - matrix[nodeA.getIndex()][nodeA.getNext().getIndex()]
-                - matrix[nodeB.getPrev().getIndex()][nodeB.getIndex()]
-                - matrix[nodeB.getIndex()][nodeB.getNext().getIndex()];
+        else if((indexA==0 && indexB==route.length()-1) || (indexA==route.length()-1 && indexB==0)){
+            Node nodeA = route.getNode(route.length()-1);
+            Node nodeB = route.getNode(0);
+            Node preNodeA = nodeA.getPrev();
+            Node nextNodeB = nodeB.getNext();
+            // 设置路径距离
+            return matrix[preNodeA.getIndex()][nodeB.getIndex()] + matrix[nodeA.getIndex()][nextNodeB.getIndex()]
+                    - matrix[preNodeA.getIndex()][nodeA.getIndex()] - matrix[nodeB.getIndex()][nextNodeB.getIndex()];
+        }else{
+            Node nodeA = route.getNode(indexA);
+            Node nodeB = route.getNode(indexB);
+            return matrix[nodeA.getPrev().getIndex()][nodeB.getIndex()]
+                    + matrix[nodeB.getIndex()][nodeA.getNext().getIndex()]
+                    + matrix[nodeB.getPrev().getIndex()][nodeA.getIndex()]
+                    + matrix[nodeA.getIndex()][nodeB.getNext().getIndex()]
+                    - matrix[nodeA.getPrev().getIndex()][nodeA.getIndex()]
+                    - matrix[nodeA.getIndex()][nodeA.getNext().getIndex()]
+                    - matrix[nodeB.getPrev().getIndex()][nodeB.getIndex()]
+                    - matrix[nodeB.getIndex()][nodeB.getNext().getIndex()];
+        }
     }
 
     public double evaluate(Route route){
