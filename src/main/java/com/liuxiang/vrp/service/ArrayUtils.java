@@ -38,8 +38,6 @@ public class ArrayUtils {
                         coordinateList.clear();
                         minValue = gapDistance[i][j];
                     }
-                    if(j==8)
-                        System.out.println(i+""+j);
                     coordinateList.add(new Coordinate(i, j));
                 }
             }
@@ -62,8 +60,6 @@ public class ArrayUtils {
                         coordinateList.clear();
                         minValue = gapDistance[i][j];
                     }
-                    if(j==8)
-                        System.out.println(i+""+j);
                     coordinateList.add(new Coordinate(i, j));
                 }
             }

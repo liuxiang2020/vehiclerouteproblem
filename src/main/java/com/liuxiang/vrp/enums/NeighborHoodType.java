@@ -3,8 +3,8 @@ import java.util.*;
 
 public enum NeighborHoodType {
     SWAP("Swap", 1, "swap operation"),
-    INSERT("Insert", 2, "insert operation"),
-    REVERSION("Reversion", 3, "reversion operation");
+    REVERSION("Reversion", 2, "reversion operation"),
+    INSERT("Insert", 3, "insert operation");
 
     private String name;
     private int index;

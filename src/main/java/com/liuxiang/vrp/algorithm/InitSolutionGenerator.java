@@ -30,9 +30,6 @@ public class InitSolutionGenerator {
     public Route generateRouteGreedy(TspModel model){
         List<Integer> path = new ArrayList<>();
         boolean[] visited = new boolean[model.getCitySize()];
-//        List<Integer> unVisitedCity = new ArrayList<>();
-//        for (int i = 0; i < model.getCitySize(); i++)
-//            unVisitedCity.add(i);
         double[][] distanceMatrix = model.getDistanceMatrix();
         Coordinate coordinate = ArrayUtils.findCoordinateOfMinimumValue(distanceMatrix);
         int curIndex = coordinate.getRow();
@@ -55,7 +52,33 @@ public class InitSolutionGenerator {
         for (int i = 1; i < path.size(); i++){
             route.add(path.get(i));
         }
+
         log.info("初始解为{}", route.toString());
+        return route;
+    }
+
+    public Route generateRouteWrite(TspModel model){
+        int[] path = new int[]{36, 35, 34, 39, 40, 38, 37, 48, 24,  5, 15,  6,  4, 25, 46, 44, 16, 50, 20, 23, 31, 18, 22,  1, 49, 32, 45, 19, 41,
+                8, 10,  9, 43, 33, 51, 12, 28, 27, 26, 47, 13, 14, 52, 11, 29, 30, 21, 17,  3, 42,  7,  2};
+        for (int i = 0; i < path.length; i++){
+            path[i]-=1;
+        }
+        Route route = new Route(path[0], model.getDistanceMatrix());
+        for (int i = 1; i < path.length; i++){
+            route.add(path[i]);
+        }
+        return route;
+    }
+
+    public Route generateRouteSeq(TspModel model){
+        int[] path = new int[model.getCitySize()];
+        for (int i = 0; i < path.length; i++){
+            path[i] = i;
+        }
+        Route route = new Route(path[0], model.getDistanceMatrix());
+        for (int i = 1; i < path.length; i++){
+            route.add(path[i]);
+        }
         return route;
     }
 

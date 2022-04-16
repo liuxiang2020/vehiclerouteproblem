@@ -26,17 +26,20 @@ public class RouteService {
      */
     public double insert(Route route, int indexA, int indexB){
         if(indexA==indexB || indexA-indexB==1){
-            log.info("indexA={}, indexB={}，插入前后结果一样，无需操作", indexA, indexB);
+//            log.info("indexA={}, indexB={}，插入前后结果一样，无需操作", indexA, indexB);
         } else{
             int nodeAIndex = route.remove(indexA);
             if(indexA<indexB)
                 route.insert(indexB-1, nodeAIndex);
             else
                 route.insert(indexB, nodeAIndex);
-            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
+//            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
         }
-        if(indexA==0)
-            log.info("indexA=0, 需改变首节点序号，改变后的首节点为{}", route.getHead().getIndex());
+        if(indexA==0){
+//            log.info("indexA=0, 需改变首节点序号，改变后的首节点为{}", route.getHead().getIndex());
+        }
+
+
         return route.getDistance();
     }
 
@@ -48,15 +51,15 @@ public class RouteService {
      */
     public Route swap(Route route, int indexA, int indexB){
         if(indexA==indexB) {
-            log.info("交换的两个节点的一样，无须交换");
+//            log.info("交换的两个节点的一样，无须交换");
         } else if(Math.abs(indexA-indexB)<=2){
-            log.info("交换的两个节点序号的差值小于等于2，采用翻转操作");
-            reversion(route, indexA, indexB);
+//            log.info("交换的两个节点序号的差值小于等于2，采用翻转操作");
+            reverse(route, indexA, indexB);
         } else{
             int nodeAIndex = route.getNode(indexA).getIndex();
             route.set(indexA, route.getNode(indexB).getIndex());
             route.set(indexB, nodeAIndex);
-            log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
+//            log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
         }
         return route;
     }
@@ -67,18 +70,18 @@ public class RouteService {
      * @param indexA
      * @param indexB
      */
-    public double reversion(Route route, int indexA, int indexB){
-        log.info("翻转第{}到{}之间的节点，翻转前，{}", indexA, indexB, route.toString());
+    public double reverse(Route route, int indexA, int indexB){
+//        log.info("翻转第{}到{}之间的节点，翻转前，{}", indexA, indexB, route.toString());
         if(indexA > indexB){
             int temp = indexB;
             indexB = indexA;
             indexA = temp;
         }else if(indexA==indexB){
-            log.info("indexA与indexB相同，不用任何处理");
+//            log.info("indexA与indexB相同，不用任何处理");
             return route.getDistance();
         }
         if(indexA==0 && indexB==route.length()-1){
-            log.info("翻转首节点和尾节点之间的路径，相当于只是方向行走，相当于未翻转，不做任务处理直接退出");
+//            log.info("翻转首节点和尾节点之间的路径，相当于只是方向行走，相当于未翻转，不做任务处理直接退出");
 //        if(indexA==0 && indexB==route.length()-1){
 //            for (int i = 0; i <= indexB; i++) {
 //                tempNode = nodeA.getNext();
@@ -124,7 +127,7 @@ public class RouteService {
         nextNodeB.setPrev(nodeA);
         preNodeA.setNext(nodeB);
 
-        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
+//        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
 
         return route.getDistance();
     }

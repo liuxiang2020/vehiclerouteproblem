@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Slf4j
 public class ReadService {
@@ -32,16 +34,20 @@ public class ReadService {
         } catch (IOException ioe) {
             log.info(ioe.getMessage());
         }
+
         double[][] distance = new double[cities.size()][cities.size()];
         for (int i = 0; i < cities.size()-1; i++) {
             City ci = cities.get(i);
             for (int j = i+1; j < cities.size(); j++) {
                 City cj = cities.get(j);
-                distance[i][j] = distance[j][i] = Math.sqrt(Math.pow((ci.x - cj.x),2) + Math.pow((ci.y - cj.y),2));
+                distance[i][j] = distance[j][i] = Double.parseDouble(String.format("%.3f", Math.sqrt(Math.pow((ci.x - cj.x),2) + Math.pow((ci.y - cj.y),2))));
             }
         }
-        for (int i = 0; i < cities.size(); i++)
-            distance[i][i] = MyNumber.MAX_VALUE;
+//        for (int i = 0; i < cities.size(); i++)
+//            distance[i][i] = MyNumber.MAX_VALUE;
+
+//        for (int i = 0; i < cities.size(); i++)
+//            System.out.println(Arrays.toString(distance[i]));
 
         return TspModel.builder()
                 .citySize(cities.size())

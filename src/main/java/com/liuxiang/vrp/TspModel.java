@@ -16,5 +16,4 @@ public class TspModel {
 
     private List<City> cityList;
 
-
 }

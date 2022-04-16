@@ -37,7 +37,7 @@ public class OperationService  {
                 routeService.insert(route, indexs[0], indexs[1]);
                 break;
             case REVERSION:
-                routeService.reversion(route, indexs[0], indexs[1]);
+                routeService.reverse(route, indexs[0], indexs[1]);
         }
         return route;
     }
@@ -99,7 +99,7 @@ public class OperationService  {
         while(localIter<maxReversionNum){
             Coordinate coordinate = ArrayUtils.findCoordinateOfMinimumValue(gapDistance);
             if(routeService.getDistance(coordinate.getRow(),coordinate.getCol()) < 0) {
-                routeService.reversion(route, coordinate.getRow(), coordinate.getCol());
+                routeService.reverse(route, coordinate.getRow(), coordinate.getCol());
                 DistanceUpdate.updateReversionDistance(routeService, route, gapDistance);
             }else{
                 break;

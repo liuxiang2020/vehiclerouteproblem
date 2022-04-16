@@ -50,6 +50,24 @@
             <artifactId>jcommon</artifactId>
             <version>1.0.24</version>
         </dependency>
+        <!--poi依赖03版本-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <!--poi依赖07版本-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.0.3</version>
+        </dependency>
     </dependencies>
 
     <properties>
