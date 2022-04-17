@@ -1,6 +1,7 @@
 package com.liuxiang.vrp.algorithm;
 
 import com.liuxiang.vrp.TspModel;
+import com.liuxiang.vrp.algorithm.operation.OperationService;
 import com.liuxiang.vrp.element.Coordinate;
 import com.liuxiang.vrp.element.Route;
 import com.liuxiang.vrp.service.ArrayUtils;
@@ -23,6 +24,10 @@ public class InitSolutionGenerator {
         for (int i = 1; i < path.size(); i++){
             route.add(path.get(i));
         }
+        int iterNum = Math.min(route.length()/2, 10);
+        route = OperationService.swapNeighbor(route, iterNum);
+        route = OperationService.reversionNeighbor(route, iterNum);
+        route = OperationService.insertNeighbor(route, iterNum);
         log.info("初始解为{}", route.toString());
         return route;
     }

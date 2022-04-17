@@ -2,10 +2,8 @@ package com.liuxiang.vrp.element;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class Node implements Serializable {
+public class Node {
     Node prev;
     int index;
     Node next;

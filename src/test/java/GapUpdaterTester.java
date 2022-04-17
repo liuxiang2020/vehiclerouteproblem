@@ -24,15 +24,15 @@ public class GapUpdaterTester {
         }
     }
 
-    public void testSwapGapUpdater(RouteService routeService, Route route){
+    public void testSwapGapUpdater(Route route){
         System.out.println("\n\ncheck updateSwapDistance operate");
         double[][] swapGapDistance = new double[route.length()][route.length()];
-        swapGapDistance = DistanceUpdate.updateSwapDistance(routeService, route, swapGapDistance);
+        swapGapDistance = DistanceUpdate.updateSwapDistance(route, swapGapDistance);
         double[][] standardGapDistance = new double[route.length()][route.length()];
         for (int i = 0; i < route.length(); i++) {
             for (int j = 0; j < route.length(); j++) {
-                Route tempRoute = (Route) SerializationUtils.clone(route);
-                routeService.swap(tempRoute, i, j);
+                Route tempRoute = RouteService.copyRoute(route);
+                RouteService.swap(tempRoute, i, j);
                 standardGapDistance[i][j] = tempRoute.getDistance()-route.getDistance();
                 if(standardGapDistance[i][j]<0) {
 //                    System.out.printf("%s,standardGapDistance[i][j]=%.2f\n", tempRoute.toString(), standardGapDistance[i][j]);
@@ -42,10 +42,10 @@ public class GapUpdaterTester {
         compareGap(swapGapDistance, standardGapDistance, "SWAP");
     }
 
-    public void testReverseGapUpdater(RouteService routeService, Route route){
+    public void testReverseGapUpdater(Route route){
         System.out.println("\n\ncheck updateReversionDistance operate");
         double[][] reverseGapDistance = new double[route.length()][route.length()];
-        DistanceUpdate.updateReversionDistance(routeService, route, reverseGapDistance);
+        DistanceUpdate.updateReversionDistance(route, reverseGapDistance);
         double[][] standardGapDistance = new double[route.length()][route.length()];
         for (int i = 0; i < route.length(); i++) {
             for (int j = 0; j < route.length(); j++) {
@@ -53,18 +53,18 @@ public class GapUpdaterTester {
                     standardGapDistance[i][j] = Double.MAX_VALUE;
                     continue;
                 }
-                Route tempRoute = (Route) SerializationUtils.clone(route);
-                routeService.reverse(tempRoute, i, j);
+                Route tempRoute = RouteService.copyRoute(route);
+                RouteService.reverse(tempRoute, i, j);
                 standardGapDistance[i][j] = tempRoute.getDistance()-route.getDistance();
             }
         }
         compareGap(reverseGapDistance, standardGapDistance, "REVERSE");
     }
 
-    public void testInsertGapUpdater(RouteService routeService, Route route){
+    public void testInsertGapUpdater(Route route){
         System.out.println("\n\ncheck updateInsertDistance operate");
         double[][] insertGapDistance = new double[route.length()][route.length()];
-        DistanceUpdate.updateInsertDistance(routeService, route, insertGapDistance);
+        DistanceUpdate.updateInsertDistance(route, insertGapDistance);
         double[][] standardGapDistance = new double[route.length()][route.length()];
         for (int i = 0; i < route.length(); i++) {
             for (int j = 0; j < route.length(); j++) {
@@ -72,18 +72,18 @@ public class GapUpdaterTester {
                     standardGapDistance[i][j] = Double.MAX_VALUE;
                     continue;
                 }
-                Route tempRoute = (Route) SerializationUtils.clone(route);
-                routeService.insert(tempRoute, i, j);
+                Route tempRoute = RouteService.copyRoute(route);
+                RouteService.insert(tempRoute, i, j);
                 standardGapDistance[i][j] = tempRoute.getDistance()-route.getDistance();
             }
         }
         compareGap(insertGapDistance, standardGapDistance, "INSERT");
     }
 
-    public void swapCheck(RouteService routeService, Route route, int indexA, int indexB){
-        double operateGap= routeService.calculateSwapGapDistance(route, indexA, indexB);
-        Route tempRoute = (Route) SerializationUtils.clone(route);
-        routeService.swap(tempRoute, indexA, indexB);
+    public void swapCheck(Route route, int indexA, int indexB){
+        double operateGap= RouteService.calculateSwapGapDistance(route, indexA, indexB);
+        Route tempRoute = RouteService.copyRoute(route);
+        RouteService.swap(tempRoute, indexA, indexB);
         double standardGapDistance = tempRoute.getDistance() - route.getDistance();
         double gap = Math.abs(operateGap - standardGapDistance);
         if(gap>0.5)
@@ -93,10 +93,10 @@ public class GapUpdaterTester {
             System.out.println("无错误");
     }
 
-    public void reverseCheck(RouteService routeService, Route route, int indexA, int indexB){
-        double operateGap= routeService.calculateReversionGapDistance(route, indexA, indexB);
-        Route tempRoute = (Route) SerializationUtils.clone(route);
-        routeService.reverse(tempRoute, indexA, indexB);
+    public void reverseCheck(Route route, int indexA, int indexB){
+        double operateGap= RouteService.calculateReversionGapDistance(route, indexA, indexB);
+        Route tempRoute = RouteService.copyRoute(route);
+        RouteService.reverse(tempRoute, indexA, indexB);
         double standardGapDistance = tempRoute.getDistance() - route.getDistance();
         double gap = Math.abs(operateGap - standardGapDistance);
         if(gap>0.5)
@@ -123,13 +123,12 @@ public class GapUpdaterTester {
     public static void main(String[] args) {
         TspModel model = TspExample.generateExampleFromFile("src/main/java/com/liuxiang/vrp/data/book_input.txt", 7);
         Route route = new InitSolutionGenerator().generateRouteSeq(model);
-        RouteService routeService = new RouteService(model.getDistanceMatrix());
         GapUpdaterTester tester = new GapUpdaterTester();
 //        tester.munu(model.getDistanceMatrix());
-//        tester.swapCheck(routeService, route, 7, 0);
-//        tester.reverseCheck(routeService, route, 3, 7);
-        tester.testSwapGapUpdater(routeService, route);
-        tester.testReverseGapUpdater(routeService, route);
-        tester.testInsertGapUpdater(routeService, route);
+//        tester.swapCheck(route, 7, 0);
+//        tester.reverseCheck(route, 3, 7);
+        tester.testSwapGapUpdater(route);
+        tester.testReverseGapUpdater(route);
+        tester.testInsertGapUpdater(route);
     }
 }

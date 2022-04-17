@@ -5,17 +5,16 @@ import com.liuxiang.vrp.element.Route;
 import com.liuxiang.vrp.utils.MyNumber;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.SerializationUtils;
 
 @Slf4j
 @Data
 public class RouteService {
     // 距离矩阵
-    private double[][] matrix;
-
-    public RouteService(double[][] matrix) {
-        this.matrix = matrix;
-    }
+//    private double[][] matrix;
+//
+//    public RouteService(double[][] matrix) {
+//        this.matrix = matrix;
+//    }
 
     /**
      * 将indexA位置的城市插入到indexB位置后面
@@ -24,7 +23,7 @@ public class RouteService {
      * @param indexB
      * @return
      */
-    public double insert(Route route, int indexA, int indexB){
+    public static double insert(Route route, int indexA, int indexB){
         if(indexA==indexB || indexA-indexB==1){
 //            log.info("indexA={}, indexB={}，插入前后结果一样，无需操作", indexA, indexB);
         } else{
@@ -33,7 +32,7 @@ public class RouteService {
                 route.insert(indexB-1, nodeAIndex);
             else
                 route.insert(indexB, nodeAIndex);
-//            log.info("将index={}插入到index={}后，{}",indexA, indexB, route.toString());
+//            log.info("将index={}插入到index={}后，路径距离为{}",indexA, indexB,  MyNumber.round(route.getDistance(),2));
         }
         if(indexA==0){
 //            log.info("indexA=0, 需改变首节点序号，改变后的首节点为{}", route.getHead().getIndex());
@@ -48,14 +47,14 @@ public class RouteService {
      * @param indexA
      * @param indexB
      */
-    public Route swap(Route route, int indexA, int indexB){
+    public static Route swap(Route route, int indexA, int indexB){
         if(indexA==indexB) {
 //            log.info("交换的两个节点的一样，无须交换");
         }  else{
             int nodeAIndex = route.getNode(indexA).getIndex();
             route.set(indexA, route.getNode(indexB).getIndex());
             route.set(indexB, nodeAIndex);
-//            log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
+//            log.info("交换第{}个节点和第{}个节点，交换后，路径起点为{}，路径距离为{}", indexA, indexB, route.getHead().getIndex(), MyNumber.round(route.getDistance(),2));
         }
         return route;
     }
@@ -66,7 +65,7 @@ public class RouteService {
      * @param indexA
      * @param indexB
      */
-    public double reverse(Route route, int indexA, int indexB){
+    public static double reverse(Route route, int indexA, int indexB){
 
         if(indexA > indexB){
             int temp = indexB;
@@ -118,11 +117,11 @@ public class RouteService {
         }
         nextNodeB.setPrev(nodeA);
         preNodeA.setNext(nodeB);
-//        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，{}", indexA, indexB, route.getHead().getIndex(), route.toString());
+//        log.info("翻转第{}到{}之间的节点，翻转后，路径起点为{}，路径距离为{}", indexA, indexB, route.getHead().getIndex(), MyNumber.round(route.getDistance(),2));
         return route.getDistance();
     }
 
-    public double calculateReversionGapDistance(Route route, int indexA, int indexB){
+    public static double calculateReversionGapDistance(Route route, int indexA, int indexB){
         if(indexA==indexB)
             return Double.MAX_VALUE;
         if((indexA==0 && indexB==route.length()-1) || (indexA==route.length()-1 && indexB==0))
@@ -131,11 +130,12 @@ public class RouteService {
         Node nodeB = route.getNode(indexB);
         Node preNodeA = nodeA.getPrev();
         Node nextNodeB = nodeB.getNext();
+        double[][] matrix = route.getMatrix();
         return matrix[preNodeA.getIndex()][nodeB.getIndex()] + matrix[nodeA.getIndex()][nextNodeB.getIndex()]
                 - matrix[preNodeA.getIndex()][nodeA.getIndex()] - matrix[nodeB.getIndex()][nextNodeB.getIndex()];
     }
 
-    public double calculateInsertGapDistance(Route route, int indexA, int indexB){
+    public static double calculateInsertGapDistance(Route route, int indexA, int indexB){
         if(indexA==indexB || indexA-indexB == 1 || (indexA==0 && indexB==route.length()-1))
             return Double.MAX_VALUE;
         else if(indexB-indexA == 1)
@@ -143,6 +143,7 @@ public class RouteService {
 
         Node nodeA = route.getNode(indexA);
         Node nodeB = route.getNode(indexB);
+        double[][] matrix = route.getMatrix();
         return matrix[nodeA.getPrev().getIndex()][nodeA.getNext().getIndex()]
                 + matrix[nodeB.getIndex()][nodeA.getIndex()]
                 + matrix[nodeA.getIndex()][nodeB.getNext().getIndex()]
@@ -151,7 +152,8 @@ public class RouteService {
                 - matrix[nodeB.getIndex()][nodeB.getNext().getIndex()];
     }
 
-    public double calculateSwapGapDistance(Route route, int indexA, int indexB){
+    public static double calculateSwapGapDistance(Route route, int indexA, int indexB){
+        double[][] matrix = route.getMatrix();
         if(indexA==indexB)
             return Double.MAX_VALUE;
         else if(Math.abs(indexA-indexB)<=2)
@@ -178,10 +180,10 @@ public class RouteService {
         }
     }
 
-    public double evaluate(Route route){
+    public static double evaluate(Route route){
         Node node = route.getHead();
         double distance = 0.0;
-
+        double[][] matrix = route.getMatrix();
         while (node.getNext().getIndex()!=route.getHead().getIndex()){
             distance += matrix[node.getIndex()][node.getNext().getIndex()];
             node = node.getNext();
@@ -193,11 +195,32 @@ public class RouteService {
         return distance;
     }
 
-    public double getDistance(int row, int col){
-        return matrix[row][col];
+    public static double evaluate(int[] path, double[][] matrix){
+        double distance = 0.0;
+        for (int i = 0; i < path.length; i++) {
+            if(i==path.length-1){
+                distance += matrix[path[i]][path[0]];
+            }else {
+                distance += matrix[path[i]][path[i+1]];
+            }
+        }
+        return distance;
     }
 
-    public static Route deepCopyRoute(Route route){
-        return (Route) SerializationUtils.clone(route);
+    public static int[] gertPath(Route route){
+        int[] path = new int[route.length()];
+        for (int i = 0; i < path.length; i++) {
+            path[i] = route.get(i);
+        }
+        return path;
     }
+
+    public static Route copyRoute(Route route){
+        int[] path = new int[route.length()];
+        for (int i = 0; i < path.length; i++) {
+            path[i] = route.get(i);
+        }
+        return new Route(path, route.getMatrix());
+    }
+
 }

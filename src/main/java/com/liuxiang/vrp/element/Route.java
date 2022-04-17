@@ -1,16 +1,16 @@
 package com.liuxiang.vrp.element;
 
+import com.liuxiang.vrp.service.RouteBuilder;
+import com.liuxiang.vrp.service.RouteService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.Serializable;
 
 /**
  * 用双向循环链表示路径
  */
 @Data
 @Slf4j
-public class Route implements Serializable {
+public class Route {
     //路径开始节点
     Node head;
     // 记录经过的节点的个数
@@ -20,7 +20,12 @@ public class Route implements Serializable {
     // 距离矩阵
     double[][] matrix;
 
-    public int[] path;
+    public Route(int[] path, double[][] matrix){
+        this.matrix = matrix;
+        this.size = path.length;
+        this.head = RouteBuilder.setHead(path);
+        this.distance = RouteService.evaluate(path, matrix);
+    }
 
     public Route(Integer index, double[][] matrix) {
         this.head = new Node(index);
